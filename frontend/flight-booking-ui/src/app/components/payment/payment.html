@@ -1,0 +1,78 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4 p-4">
+          <h4 class="mb-0 fw-bold">
+            <i class="bi bi-credit-card-fill me-2"></i>Payment
+          </h4>
+        </div>
+        <div class="card-body p-4">
+
+          <div class="alert alert-info mb-4">
+            <div class="d-flex justify-content-between">
+              <span>{{ source }} → {{ destination }}</span>
+              <strong>₹{{ amount }}</strong>
+            </div>
+            <small class="text-muted">{{ flightNumber }} | {{ travelDate }}</small>
+          </div>
+
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Payment Mode</label>
+            <select class="form-select form-select-lg" [(ngModel)]="paymentMode">
+              <option value="CARD">Credit / Debit Card</option>
+              <option value="UPI">UPI</option>
+            </select>
+          </div>
+
+          <div *ngIf="paymentMode === 'CARD'">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Card Number</label>
+              <input type="text" class="form-control form-control-lg"
+                     [(ngModel)]="cardNumber"
+                     placeholder="1234 5678 9012 3456"
+                     maxlength="16">
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label class="form-label fw-semibold">Expiry Date</label>
+                <input type="text" class="form-control form-control-lg"
+                       [(ngModel)]="cardExpiry"
+                       placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-semibold">CVV</label>
+                <input type="password" class="form-control form-control-lg"
+                       [(ngModel)]="cardCvv"
+                       placeholder="***" maxlength="4">
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="paymentMode === 'UPI'" class="mb-3">
+            <label class="form-label fw-semibold">UPI ID</label>
+            <input type="text" class="form-control form-control-lg"
+                   placeholder="yourname@upi">
+          </div>
+
+          <div *ngIf="loading" class="text-center py-3">
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-2 text-muted">Processing payment...</p>
+          </div>
+
+          <div *ngIf="!loading" class="d-flex gap-3 mt-3">
+            <button class="btn btn-outline-secondary flex-fill" (click)="goBack()">
+              <i class="bi bi-arrow-left me-2"></i>Back
+            </button>
+            <button class="btn btn-success flex-fill btn-lg" (click)="onPay()">
+              <i class="bi bi-lock-fill me-2"></i>Pay ₹{{ amount }}
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

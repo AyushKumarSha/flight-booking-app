@@ -1,0 +1,51 @@
+<div class="container mt-4">
+  <h4 class="fw-bold mb-1">
+    <i class="bi bi-search me-2 text-primary"></i>
+    {{ source }} → {{ destination }}
+  </h4>
+  <p class="text-muted mb-3">{{ travelDate }}</p>
+
+  <div class="mb-3 d-flex gap-2 flex-wrap">
+    <button class="btn btn-outline-primary btn-sm" (click)="filterByPrice(3000)">Under ₹3000</button>
+    <button class="btn btn-outline-primary btn-sm" (click)="filterByPrice(5000)">Under ₹5000</button>
+    <button class="btn btn-outline-primary btn-sm" (click)="filterByPrice(8000)">Under ₹8000</button>
+    <button class="btn btn-outline-secondary btn-sm" (click)="clearFilter()">Clear Filter</button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Searching flights...</p>
+  </div>
+
+  <div *ngIf="!loading && filteredFlights.length === 0" class="alert alert-info">
+    No Flights available matching your criterion
+  </div>
+
+  <div *ngFor="let flight of filteredFlights" class="card mb-3 border-0 shadow-sm rounded-4">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-md-2">
+          <div class="fw-bold text-primary">{{ flight.airline }}</div>
+          <small class="text-muted">{{ flight.flightNumber }}</small><br>
+          <small class="text-muted">{{ flight.aircraftName }}</small>
+        </div>
+        <div class="col-md-3 text-center">
+          <div class="fs-4 fw-bold">{{ flight.departureTime }}</div>
+          <div class="text-muted small">{{ flight.source }}</div>
+        </div>
+        <div class="col-md-2 text-center">
+          <i class="bi bi-arrow-right text-primary fs-4"></i>
+        </div>
+        <div class="col-md-3 text-center">
+          <div class="fs-4 fw-bold">{{ flight.arrivalTime }}</div>
+          <div class="text-muted small">{{ flight.destination }}</div>
+        </div>
+        <div class="col-md-2 text-end">
+          <div class="fs-5 fw-bold text-success">₹{{ flight.dynamicPrice }}</div>
+          <small class="text-muted d-block">{{ flight.availableSeats }} seats left</small>
+          <button class="btn btn-primary btn-sm mt-2" (click)="onBook(flight)">Book Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

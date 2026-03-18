@@ -1,0 +1,42 @@
+<div class="bg-primary text-white py-5">
+  <div class="container text-center">
+    <h1 class="display-4 fw-bold mb-2">
+      <i class="bi bi-airplane-fill me-3"></i>Find Your Flight
+    </h1>
+    <p class="lead">Search and book flights instantly</p>
+  </div>
+</div>
+
+<div class="container mt-n3">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-geo-alt me-1 text-primary"></i>From
+        </label>
+        <input type="text" class="form-control form-control-lg"
+               [(ngModel)]="source" placeholder="e.g. Mumbai">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-geo-alt-fill me-1 text-primary"></i>To
+        </label>
+        <input type="text" class="form-control form-control-lg"
+               [(ngModel)]="destination" placeholder="e.g. Delhi">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-calendar me-1 text-primary"></i>Travel Date
+        </label>
+        <input type="date" class="form-control form-control-lg"
+               [(ngModel)]="travelDate">
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary btn-lg w-100" (click)="onSearch()">
+          <i class="bi bi-search me-2"></i>Search Flights
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
