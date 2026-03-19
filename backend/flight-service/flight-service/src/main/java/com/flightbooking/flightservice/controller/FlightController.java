@@ -40,4 +40,10 @@ public class FlightController {
     public ResponseEntity<FlightSearchResponseDTO> getRouteById(@PathVariable Long routeId) {
         return ResponseEntity.ok(flightService.getRouteById(routeId));
     }
+    
+    @PutMapping("/routes/{routeId}/decrement-seat")
+    public ResponseEntity<Void> decrementSeat(@PathVariable Long routeId) {
+        flightService.decrementSeat(routeId);
+        return ResponseEntity.ok().build();
+    }
 }

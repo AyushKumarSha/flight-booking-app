@@ -9,4 +9,5 @@ public interface FlightService {
     FlightRouteRequestDTO addRoute(FlightRouteRequestDTO request);
     List<FlightSearchResponseDTO> searchFlights(String source, String destination, LocalDate travelDate);
     FlightSearchResponseDTO getRouteById(Long routeId);
+    void decrementSeat(Long routeId);
 }

@@ -6,10 +6,14 @@
   <p class="text-muted mb-3">{{ travelDate }}</p>
 
   <div class="mb-3 d-flex gap-2 flex-wrap">
-    <button class="btn btn-outline-primary btn-sm" (click)="filterByPrice(3000)">Under ₹3000</button>
-    <button class="btn btn-outline-primary btn-sm" (click)="filterByPrice(5000)">Under ₹5000</button>
-    <button class="btn btn-outline-primary btn-sm" (click)="filterByPrice(8000)">Under ₹8000</button>
-    <button class="btn btn-outline-secondary btn-sm" (click)="clearFilter()">Clear Filter</button>
+    <button class="btn btn-outline-primary btn-sm"
+            (click)="filterByPrice(3000)" [disabled]="loading">Under ₹3000</button>
+    <button class="btn btn-outline-primary btn-sm"
+            (click)="filterByPrice(5000)" [disabled]="loading">Under ₹5000</button>
+    <button class="btn btn-outline-primary btn-sm"
+            (click)="filterByPrice(8000)" [disabled]="loading">Under ₹8000</button>
+    <button class="btn btn-outline-secondary btn-sm"
+            (click)="clearFilter()" [disabled]="loading">Clear Filter</button>
   </div>
 
   <div *ngIf="loading" class="text-center py-5">
@@ -17,8 +21,14 @@
     <p class="mt-2">Searching flights...</p>
   </div>
 
-  <div *ngIf="!loading && filteredFlights.length === 0" class="alert alert-info">
+  <div *ngIf="!loading && flights.length === 0" class="alert alert-info">
     No Flights available matching your criterion
+  </div>
+
+  <div *ngIf="!loading && flights.length > 0 && filteredFlights.length === 0"
+       class="alert alert-warning">
+    No flights match the selected filter. 
+    <a href="#" (click)="clearFilter()">Clear filter</a> to see all results.
   </div>
 
   <div *ngFor="let flight of filteredFlights" class="card mb-3 border-0 shadow-sm rounded-4">

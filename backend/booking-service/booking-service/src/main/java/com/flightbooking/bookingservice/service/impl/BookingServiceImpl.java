@@ -94,6 +94,12 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found: " + bookingId));
         booking.setStatus(status);
         bookingRepository.save(booking);
+
+        // Reduce seat count if payment successful
+        if ("SUCCESSFUL".equals(status)) {
+            log.info("Decrementing seat for routeId: {}", booking.getRouteId());
+            flightServiceClient.decrementSeat(booking.getRouteId());
+        }
     }
 
     @Override

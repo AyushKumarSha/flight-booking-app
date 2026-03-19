@@ -1,6 +1,7 @@
 package com.flightbooking.flightservice.service.impl;
 
 import com.flightbooking.flightservice.aggregate.FlightAggregate;
+
 import com.flightbooking.flightservice.dto.*;
 import com.flightbooking.flightservice.entity.*;
 import com.flightbooking.flightservice.exception.*;
@@ -9,6 +10,7 @@ import com.flightbooking.flightservice.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,6 +73,13 @@ public class FlightServiceImpl implements FlightService {
         FlightRoute route = flightRouteRepository.findById(routeId)
                 .orElseThrow(() -> new FlightNotFoundException("Route not found: " + routeId));
         return mapToSearchResponse(route, LocalDate.now());
+    }
+    
+    @Override
+    @Transactional
+    public void decrementSeat(Long routeId) {
+        log.info("Decrementing seat for routeId: {}", routeId);
+        flightRouteRepository.decrementSeat(routeId);
     }
 
     private FlightSearchResponseDTO mapToSearchResponse(FlightRoute route, LocalDate travelDate) {

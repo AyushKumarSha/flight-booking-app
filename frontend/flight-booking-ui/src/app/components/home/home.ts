@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +15,44 @@ export class HomeComponent {
   travelDate = '';
   errorMessage = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Kolkata',
+            'Hyderabad', 'Pune', 'Ahmedabad', 'Jaipur', 'Goa'];
+
+  filteredSources: string[] = [];
+  filteredDestinations: string[] = [];
+  showSourceDropdown = false;
+  showDestinationDropdown = false;
+
+  constructor(private router: Router) {}
+
+  onSourceInput(): void {
+    const val = this.source.toLowerCase();
+    this.filteredSources = this.cities.filter(c => c.toLowerCase().startsWith(val));
+    this.showSourceDropdown = true;
+  }
+
+  onDestinationInput(): void {
+    const val = this.destination.toLowerCase();
+    this.filteredDestinations = this.cities.filter(c => c.toLowerCase().startsWith(val));
+    this.showDestinationDropdown = true;
+  }
+
+  selectSource(city: string): void {
+    this.source = city;
+    this.showSourceDropdown = false;
+  }
+
+  selectDestination(city: string): void {
+    this.destination = city;
+    this.showDestinationDropdown = false;
+  }
+
+  hideDropdowns(): void {
+    setTimeout(() => {
+      this.showSourceDropdown = false;
+      this.showDestinationDropdown = false;
+    }, 200);
+  }
 
   onSearch(): void {
     if (!this.source || !this.destination || !this.travelDate) {
