@@ -43,9 +43,7 @@
                    [checked]="isAirlineSelected(airline)"
                    (change)="toggleAirline(airline)">
             <label class="form-check-label d-flex align-items-center gap-2" [for]="airline">
-              <!-- Mini logo in filter -->
-              <img *ngIf="getAirlineLogo(airline)"
-                   [src]="getAirlineLogo(airline)"
+              <img [src]="getAirlineLogo(airline)"
                    [alt]="airline"
                    style="height:18px; width:36px; object-fit:contain;"
                    onerror="this.style.display='none'">
@@ -92,22 +90,11 @@
 
             <!-- AIRLINE LOGO + NAME -->
             <div class="col-md-2 text-center">
-              <!-- Show real logo if available -->
-              <img *ngIf="getAirlineLogo(flight.airline)"
-                   [src]="getAirlineLogo(flight.airline)"
+              <img [src]="getAirlineLogo(flight.airline)"
                    [alt]="flight.airline"
                    style="height:45px; width:90px; object-fit:contain;"
                    class="mb-1"
-                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-              <!-- Fallback colored circle -->
-              <div *ngIf="!getAirlineLogo(flight.airline)"
-                   class="rounded-circle d-inline-flex align-items-center justify-content-center mb-1"
-                   [style.background-color]="getAirlineColor(flight.airline)"
-                   style="width:45px; height:45px;">
-                <span class="text-white fw-bold fs-5">
-                  {{ getAirlineInitial(flight.airline) }}
-                </span>
-              </div>
+                   onerror="this.style.display='none'">
               <div class="fw-bold text-primary small mt-1">{{ flight.airline }}</div>
               <div class="text-muted" style="font-size:11px;">{{ flight.flightNumber }}</div>
               <div class="text-muted" style="font-size:11px;">{{ flight.aircraftName }}</div>
