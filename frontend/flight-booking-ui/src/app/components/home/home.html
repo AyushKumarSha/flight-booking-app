@@ -21,17 +21,28 @@
                [(ngModel)]="source"
                (input)="onSourceInput()"
                (blur)="hideDropdowns()"
-               placeholder="e.g. Mumbai"
+               placeholder="City or airport code"
                autocomplete="off">
         <ul *ngIf="showSourceDropdown && filteredSources.length > 0"
             class="list-group position-absolute w-100 shadow"
             style="z-index:1000; top:100%">
-          <li *ngFor="let city of filteredSources"
-              class="list-group-item list-group-item-action"
-              (mousedown)="selectSource(city)">
-            <i class="bi bi-geo-alt-fill text-primary me-2"></i>{{ city }}
+          <li *ngFor="let airport of filteredSources"
+              class="list-group-item list-group-item-action py-2"
+              (mousedown)="selectSource(airport)">
+            <span class="badge bg-primary me-2">{{ airport.code }}</span>
+            {{ airport.name }}
           </li>
         </ul>
+      </div>
+
+      <!-- SWAP BUTTON -->
+      <div class="col-md-1 text-center pb-1">
+        <button class="btn btn-outline-primary rounded-circle"
+                style="width:42px; height:42px;"
+                (click)="swapAirports()"
+                title="Swap airports">
+          <i class="bi bi-arrow-left-right"></i>
+        </button>
       </div>
 
       <!-- TO -->
@@ -43,21 +54,22 @@
                [(ngModel)]="destination"
                (input)="onDestinationInput()"
                (blur)="hideDropdowns()"
-               placeholder="e.g. Delhi"
+               placeholder="City or airport code"
                autocomplete="off">
         <ul *ngIf="showDestinationDropdown && filteredDestinations.length > 0"
             class="list-group position-absolute w-100 shadow"
             style="z-index:1000; top:100%">
-          <li *ngFor="let city of filteredDestinations"
-              class="list-group-item list-group-item-action"
-              (mousedown)="selectDestination(city)">
-            <i class="bi bi-geo-alt-fill text-primary me-2"></i>{{ city }}
+          <li *ngFor="let airport of filteredDestinations"
+              class="list-group-item list-group-item-action py-2"
+              (mousedown)="selectDestination(airport)">
+            <span class="badge bg-primary me-2">{{ airport.code }}</span>
+            {{ airport.name }}
           </li>
         </ul>
       </div>
 
       <!-- DATE -->
-      <div class="col-md-3">
+      <div class="col-md-2">
         <label class="form-label fw-semibold">
           <i class="bi bi-calendar me-1 text-primary"></i>Travel Date
         </label>

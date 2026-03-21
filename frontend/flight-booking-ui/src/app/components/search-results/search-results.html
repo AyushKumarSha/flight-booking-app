@@ -1,61 +1,156 @@
-<div class="container mt-4">
-  <h4 class="fw-bold mb-1">
-    <i class="bi bi-search me-2 text-primary"></i>
-    {{ source }} → {{ destination }}
-  </h4>
-  <p class="text-muted mb-3">{{ travelDate }}</p>
+<div class="container-fluid mt-3">
+  <div class="row">
 
-  <div class="mb-3 d-flex gap-2 flex-wrap">
-    <button class="btn btn-outline-primary btn-sm"
-            (click)="filterByPrice(3000)" [disabled]="loading">Under ₹3000</button>
-    <button class="btn btn-outline-primary btn-sm"
-            (click)="filterByPrice(5000)" [disabled]="loading">Under ₹5000</button>
-    <button class="btn btn-outline-primary btn-sm"
-            (click)="filterByPrice(8000)" [disabled]="loading">Under ₹8000</button>
-    <button class="btn btn-outline-secondary btn-sm"
-            (click)="clearFilter()" [disabled]="loading">Clear Filter</button>
-  </div>
+    <!-- LEFT FILTER PANEL -->
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-3 sticky-top" style="top: 10px;">
 
-  <div *ngIf="loading" class="text-center py-5">
-    <div class="spinner-border text-primary"></div>
-    <p class="mt-2">Searching flights...</p>
-  </div>
-
-  <div *ngIf="!loading && flights.length === 0" class="alert alert-info">
-    No Flights available matching your criterion
-  </div>
-
-  <div *ngIf="!loading && flights.length > 0 && filteredFlights.length === 0"
-       class="alert alert-warning">
-    No flights match the selected filter. 
-    <a href="#" (click)="clearFilter()">Clear filter</a> to see all results.
-  </div>
-
-  <div *ngFor="let flight of filteredFlights" class="card mb-3 border-0 shadow-sm rounded-4">
-    <div class="card-body">
-      <div class="row align-items-center">
-        <div class="col-md-2">
-          <div class="fw-bold text-primary">{{ flight.airline }}</div>
-          <small class="text-muted">{{ flight.flightNumber }}</small><br>
-          <small class="text-muted">{{ flight.aircraftName }}</small>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold mb-0">Filters</h6>
+          <button class="btn btn-sm btn-outline-danger" (click)="clearFilters()">
+            Clear All
+          </button>
         </div>
-        <div class="col-md-3 text-center">
-          <div class="fs-4 fw-bold">{{ flight.departureTime }}</div>
-          <div class="text-muted small">{{ flight.source }}</div>
+
+        <!-- PRICE SLIDER -->
+        <div class="mb-4">
+          <h6 class="fw-semibold text-muted mb-2">
+            <i class="bi bi-tag me-1"></i>One Way Price
+          </h6>
+          <input type="range" class="form-range"
+                 [min]="0"
+                 [max]="maxPrice"
+                 step="100"
+                 [(ngModel)]="selectedMaxPrice"
+                 (input)="onPriceChange()">
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">₹0</small>
+            <small class="fw-bold text-primary">Up to ₹{{ selectedMaxPrice }}</small>
+            <small class="text-muted">₹{{ maxPrice }}</small>
+          </div>
         </div>
-        <div class="col-md-2 text-center">
-          <i class="bi bi-arrow-right text-primary fs-4"></i>
+
+        <hr>
+
+        <!-- AIRLINE FILTER -->
+        <div class="mb-3">
+          <h6 class="fw-semibold text-muted mb-2">
+            <i class="bi bi-airplane me-1"></i>Airlines
+          </h6>
+          <div *ngFor="let airline of airlines" class="form-check mb-2">
+            <input class="form-check-input" type="checkbox"
+                   [id]="airline"
+                   [checked]="isAirlineSelected(airline)"
+                   (change)="toggleAirline(airline)">
+            <label class="form-check-label d-flex align-items-center gap-2" [for]="airline">
+              <!-- Mini logo in filter -->
+              <img *ngIf="getAirlineLogo(airline)"
+                   [src]="getAirlineLogo(airline)"
+                   [alt]="airline"
+                   style="height:18px; width:36px; object-fit:contain;"
+                   onerror="this.style.display='none'">
+              {{ airline }}
+            </label>
+          </div>
         </div>
-        <div class="col-md-3 text-center">
-          <div class="fs-4 fw-bold">{{ flight.arrivalTime }}</div>
-          <div class="text-muted small">{{ flight.destination }}</div>
-        </div>
-        <div class="col-md-2 text-end">
-          <div class="fs-5 fw-bold text-success">₹{{ flight.dynamicPrice }}</div>
-          <small class="text-muted d-block">{{ flight.availableSeats }} seats left</small>
-          <button class="btn btn-primary btn-sm mt-2" (click)="onBook(flight)">Book Now</button>
+
+      </div>
+    </div>
+
+    <!-- RIGHT RESULTS PANEL -->
+    <div class="col-md-9">
+
+      <h5 class="fw-bold mb-1">
+        Flights from <span class="text-primary">{{ source }}</span>
+        to <span class="text-primary">{{ destination }}</span>
+      </h5>
+      <p class="text-muted mb-3">{{ travelDate }} · {{ filteredFlights.length }} flights found</p>
+
+      <!-- LOADING -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2">Searching flights...</p>
+      </div>
+
+      <!-- NO RESULTS -->
+      <div *ngIf="!loading && flights.length === 0" class="alert alert-info">
+        No Flights available matching your criterion
+      </div>
+
+      <!-- FILTER EMPTY -->
+      <div *ngIf="!loading && flights.length > 0 && filteredFlights.length === 0"
+           class="alert alert-warning">
+        No flights match the selected filters.
+        <a href="javascript:void(0)" (click)="clearFilters()" class="fw-bold">Clear filters</a>
+      </div>
+
+      <!-- FLIGHT CARDS -->
+      <div *ngFor="let flight of filteredFlights"
+           class="card mb-3 border-0 shadow-sm rounded-4 hover-card">
+        <div class="card-body py-3 px-4">
+          <div class="row align-items-center">
+
+            <!-- AIRLINE LOGO + NAME -->
+            <div class="col-md-2 text-center">
+              <!-- Show real logo if available -->
+              <img *ngIf="getAirlineLogo(flight.airline)"
+                   [src]="getAirlineLogo(flight.airline)"
+                   [alt]="flight.airline"
+                   style="height:45px; width:90px; object-fit:contain;"
+                   class="mb-1"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+              <!-- Fallback colored circle -->
+              <div *ngIf="!getAirlineLogo(flight.airline)"
+                   class="rounded-circle d-inline-flex align-items-center justify-content-center mb-1"
+                   [style.background-color]="getAirlineColor(flight.airline)"
+                   style="width:45px; height:45px;">
+                <span class="text-white fw-bold fs-5">
+                  {{ getAirlineInitial(flight.airline) }}
+                </span>
+              </div>
+              <div class="fw-bold text-primary small mt-1">{{ flight.airline }}</div>
+              <div class="text-muted" style="font-size:11px;">{{ flight.flightNumber }}</div>
+              <div class="text-muted" style="font-size:11px;">{{ flight.aircraftName }}</div>
+            </div>
+
+            <!-- DEPARTURE -->
+            <div class="col-md-2 text-center">
+              <div class="fs-4 fw-bold">{{ flight.departureTime.substring(0,5) }}</div>
+              <div class="text-muted small fw-semibold">{{ flight.source }}</div>
+            </div>
+
+            <!-- DURATION + NONSTOP -->
+            <div class="col-md-3 text-center">
+              <div class="text-muted small mb-1">
+                {{ getFlightDuration(flight.departureTime, flight.arrivalTime) }}
+              </div>
+              <div class="d-flex align-items-center justify-content-center">
+                <div style="height:2px; width:40px; background:#ccc;"></div>
+                <i class="bi bi-airplane text-primary mx-1" style="font-size:14px;"></i>
+                <div style="height:2px; width:40px; background:#ccc;"></div>
+              </div>
+              <div class="text-success small mt-1 fw-semibold">Non-stop</div>
+            </div>
+
+            <!-- ARRIVAL -->
+            <div class="col-md-2 text-center">
+              <div class="fs-4 fw-bold">{{ flight.arrivalTime.substring(0,5) }}</div>
+              <div class="text-muted small fw-semibold">{{ flight.destination }}</div>
+            </div>
+
+            <!-- PRICE + BOOK -->
+            <div class="col-md-3 text-end">
+              <div class="fs-4 fw-bold text-success">₹{{ flight.dynamicPrice }}</div>
+              <div class="text-muted small mb-2">{{ flight.availableSeats }} seats left</div>
+              <button class="btn btn-primary px-4" (click)="onBook(flight)">
+                Book Now
+              </button>
+            </div>
+
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>

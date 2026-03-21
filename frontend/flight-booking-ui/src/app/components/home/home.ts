@@ -15,11 +15,21 @@ export class HomeComponent {
   travelDate = '';
   errorMessage = '';
 
-  cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Kolkata',
-            'Hyderabad', 'Pune', 'Ahmedabad', 'Jaipur', 'Goa'];
+  airports = [
+    { code: 'BOM', name: 'Mumbai', display: 'Mumbai (BOM)' },
+    { code: 'DEL', name: 'Delhi', display: 'Delhi (DEL)' },
+    { code: 'BLR', name: 'Bangalore', display: 'Bangalore (BLR)' },
+    { code: 'MAA', name: 'Chennai', display: 'Chennai (MAA)' },
+    { code: 'CCU', name: 'Kolkata', display: 'Kolkata (CCU)' },
+    { code: 'HYD', name: 'Hyderabad', display: 'Hyderabad (HYD)' },
+    { code: 'PNQ', name: 'Pune', display: 'Pune (PNQ)' },
+    { code: 'AMD', name: 'Ahmedabad', display: 'Ahmedabad (AMD)' },
+    { code: 'JAI', name: 'Jaipur', display: 'Jaipur (JAI)' },
+    { code: 'GOI', name: 'Goa', display: 'Goa (GOI)' },
+  ];
 
-  filteredSources: string[] = [];
-  filteredDestinations: string[] = [];
+  filteredSources: any[] = [];
+  filteredDestinations: any[] = [];
   showSourceDropdown = false;
   showDestinationDropdown = false;
 
@@ -27,23 +37,29 @@ export class HomeComponent {
 
   onSourceInput(): void {
     const val = this.source.toLowerCase();
-    this.filteredSources = this.cities.filter(c => c.toLowerCase().startsWith(val));
+    this.filteredSources = this.airports.filter(a =>
+      a.name.toLowerCase().startsWith(val) ||
+      a.code.toLowerCase().startsWith(val)
+    );
     this.showSourceDropdown = true;
   }
 
   onDestinationInput(): void {
     const val = this.destination.toLowerCase();
-    this.filteredDestinations = this.cities.filter(c => c.toLowerCase().startsWith(val));
+    this.filteredDestinations = this.airports.filter(a =>
+      a.name.toLowerCase().startsWith(val) ||
+      a.code.toLowerCase().startsWith(val)
+    );
     this.showDestinationDropdown = true;
   }
 
-  selectSource(city: string): void {
-    this.source = city;
+  selectSource(airport: any): void {
+    this.source = airport.name;
     this.showSourceDropdown = false;
   }
 
-  selectDestination(city: string): void {
-    this.destination = city;
+  selectDestination(airport: any): void {
+    this.destination = airport.name;
     this.showDestinationDropdown = false;
   }
 
@@ -54,9 +70,19 @@ export class HomeComponent {
     }, 200);
   }
 
+  swapAirports(): void {
+    const temp = this.source;
+    this.source = this.destination;
+    this.destination = temp;
+  }
+
   onSearch(): void {
     if (!this.source || !this.destination || !this.travelDate) {
       this.errorMessage = 'Please fill in all search fields';
+      return;
+    }
+    if (this.source === this.destination) {
+      this.errorMessage = 'Source and destination cannot be the same';
       return;
     }
     this.router.navigate(['/search-results'], {

@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+.hover-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hover-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+}
