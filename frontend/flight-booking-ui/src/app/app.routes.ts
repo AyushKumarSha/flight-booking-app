@@ -6,7 +6,7 @@ import { PaymentComponent } from './components/payment/payment';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success';
 import { PaymentFailedComponent } from './components/payment-failed/payment-failed';
 import { RegisterComponent } from './components/register/register';
-import { LoginComponent } from './components/login/login';
+import { LoginComponent } from './components/home/login/login';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },

@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FlightService } from '../../services/flight.service';
 import { FlightSearchResponse } from '../../models/flight.model';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-search-results',
@@ -26,7 +28,6 @@ export class SearchResultsComponent implements OnInit {
   airlines: string[] = [];
   selectedAirlines: string[] = [];
 
-  // ✅ Local asset paths — save logos to src/assets/airlines/
   airlineLogos: { [key: string]: string } = {
     'Air India': 'assets/airlines/air-india.png',
     'IndiGo': 'assets/airlines/indigo.png',
@@ -42,11 +43,12 @@ export class SearchResultsComponent implements OnInit {
   };
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private flightService: FlightService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  private route: ActivatedRoute,
+  private router: Router,
+  private flightService: FlightService,
+  private cdr: ChangeDetectorRef,
+  private location: Location
+) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -151,7 +153,11 @@ export class SearchResultsComponent implements OnInit {
     const m = mins % 60;
     return `${h}h ${m}m`;
   }
+  goBack(): void {
+    this.router.navigate(['/home']);
+  }
 
+  
   onBook(flight: FlightSearchResponse): void {
     this.router.navigate(['/booking'], {
       queryParams: {

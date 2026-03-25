@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PaymentFailedComponent } from './payment-failed';
+import { provideRouter } from '@angular/router';
+import { routes } from '../../app.routes';
 
-import { PaymentFailed } from './payment-failed';
-
-describe('PaymentFailed', () => {
-  let component: PaymentFailed;
-  let fixture: ComponentFixture<PaymentFailed>;
+describe('PaymentFailedComponent', () => {
+  let component: PaymentFailedComponent;
+  let fixture: ComponentFixture<PaymentFailedComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PaymentFailed],
+      imports: [PaymentFailedComponent],
+      providers: [provideRouter(routes)]
     }).compileComponents();
-
-    fixture = TestBed.createComponent(PaymentFailed);
+    fixture = TestBed.createComponent(PaymentFailedComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
